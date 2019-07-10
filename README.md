@@ -1,7 +1,7 @@
 # simple_math
 A header-only C++ math library for games and rendering that conforms to the vulkan API.
 
-## Feautures
+## Features
 - SIMD (SSE to AVX)
 - Vector types 
      - [vec2](include/simple_math/vec2.hpp) 

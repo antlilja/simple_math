@@ -32,7 +32,7 @@ target_compile_features(simple_math
 
 target_compile_options(simple_math
 	INTERFACE
-		$<$<OR:$<AND:$<CXX_COMPILER_ID:Clang>,$<NOT:$<STREQUAL:"x${CMAKE_CXX_SIMULATE_ID}","xMSVC">>>,$<CXX_COMPILER_ID:GNU>>:
+		$<$<OR:$<OR:$<AND:$<CXX_COMPILER_ID:Clang>,$<NOT:$<STREQUAL:"x${CMAKE_CXX_SIMULATE_ID}","xMSVC">>>,$<CXX_COMPILER_ID:GNU>>,$<CXX_COMPILER_ID:AppleClang>>:
 			$<$<NOT:$<STREQUAL:"${SIMPLE_MATH_SIMD_LEVEL}","NONE">>:
 				$<$<STREQUAL:"${SIMPLE_MATH_SIMD_LEVEL}","SSE4">:
 					-msse4.1

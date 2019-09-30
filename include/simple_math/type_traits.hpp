@@ -4,7 +4,7 @@
 #pragma once
 #include <functional>
 
-namespace sm::intern {
+namespace sm::detail {
     // Boiler plate for operator checking
     template <class T, class R, class... Args>
     std::is_convertible<std::invoke_result_t<T, Args...>, R>
@@ -30,4 +30,4 @@ namespace sm::intern {
     using has_multiplies = is_invokable<std::multiplies<>, L, L, R>;
     template <class L, class R = L>
     constexpr auto has_multiplies_v = has_multiplies<L, R>::value;
-} // namespace sm::intern
+} // namespace sm::detail

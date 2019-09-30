@@ -32,11 +32,11 @@ namespace sm {
         static_assert(std::is_floating_point<F>::value,
                       "lerp requires t to be a floating point type");
 
-        static_assert(intern::has_addition_v<T>,
+        static_assert(detail::has_addition_v<T>,
                       "lerp requires a and b to have addition operator");
 
         static_assert(
-            intern::has_multiplies_v<T, F>,
+            detail::has_multiplies_v<T, F>,
             "lerp requires a and b to have multiplication operators with t");
 
         return (a * (static_cast<F>(1.0) - t)) + (b * t);

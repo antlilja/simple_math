@@ -40,7 +40,7 @@ namespace sm {
         inline constexpr vec4(__m128 _xmm) : xmm(std::move(_xmm)) {}
 
         // Operations
-        template <simd_t simd = intern::default_simd>
+        template <simd_t simd = detail::default_simd>
         inline vec4 inverse() const {
             return simd != simd_t::NONE ? vec4(_mm_xor_ps(xmm, M128_SIGNMASK))
                                         : vec4(-x, -y, -z, -w);
@@ -48,7 +48,7 @@ namespace sm {
 
         inline vec4 operator-() const { return inverse(); }
 
-        template <simd_t simd = intern::default_simd>
+        template <simd_t simd = detail::default_simd>
         inline float magnitude() const {
             if constexpr (simd >= simd_t::SSE4) {
                 return _mm_cvtss_f32(_mm_sqrt_ss(_mm_dp_ps(xmm, xmm, 0xff)));
@@ -75,7 +75,7 @@ namespace sm {
             }
         }
 
-        template <simd_t simd = intern::default_simd>
+        template <simd_t simd = detail::default_simd>
         inline vec4 normalize() const {
             if constexpr (simd >= simd_t::SSE4) {
                 const auto x = _mm_sqrt_ps(_mm_dp_ps(xmm, xmm, 0xff));
@@ -114,7 +114,7 @@ namespace sm {
             }
         }
 
-        template <simd_t simd = intern::default_simd>
+        template <simd_t simd = detail::default_simd>
         inline vec4 normalize_fast() const {
             if constexpr (simd >= simd_t::SSE4) {
                 const auto x = _mm_rsqrt_ps(_mm_dp_ps(xmm, xmm, 0xff));
@@ -158,7 +158,7 @@ namespace sm {
     // Operations //
 
     // Add
-    template <simd_t simd = intern::default_simd>
+    template <simd_t simd = detail::default_simd>
     inline vec4 add(const vec4& lhs, const vec4& rhs) {
         return simd != simd_t::NONE ? vec4(_mm_add_ps(lhs.xmm, rhs.xmm))
                                     : vec4(lhs.x + rhs.x, lhs.y + rhs.y,
@@ -174,7 +174,7 @@ namespace sm {
     }
 
     // Subtract
-    template <simd_t simd = intern::default_simd>
+    template <simd_t simd = detail::default_simd>
     inline vec4 subtract(const vec4& lhs, const vec4& rhs) {
         return simd != simd_t::NONE ? vec4(_mm_sub_ps(lhs.xmm, rhs.xmm))
                                     : vec4(lhs.x - rhs.x, lhs.y - rhs.y,
@@ -190,7 +190,7 @@ namespace sm {
     }
 
     // Multiply
-    template <simd_t simd = intern::default_simd>
+    template <simd_t simd = detail::default_simd>
     inline vec4 multiply(const vec4& v, const float scalar) {
         return simd != simd_t::NONE
                    ? vec4(_mm_mul_ps(v.xmm, _mm_set1_ps(scalar)))
@@ -207,7 +207,7 @@ namespace sm {
     }
 
     // Divide
-    template <simd_t simd = intern::default_simd>
+    template <simd_t simd = detail::default_simd>
     inline vec4 divide(const vec4& v, const float scalar) {
         SIMPLE_MATH_ASSERT(scalar != 0.0F);
         return simd != simd_t::NONE
@@ -225,7 +225,7 @@ namespace sm {
     }
 
     // Element-wise product
-    template <simd_t simd = intern::default_simd>
+    template <simd_t simd = detail::default_simd>
     inline vec4 element_wise(const vec4& lhs, const vec4& rhs) {
         return simd != simd_t::NONE ? vec4(_mm_mul_ps(lhs.xmm, rhs.xmm))
                                     : vec4(lhs.x * rhs.x, lhs.y * rhs.y,
@@ -233,7 +233,7 @@ namespace sm {
     }
 
     // Dot product
-    template <simd_t simd = intern::default_simd>
+    template <simd_t simd = detail::default_simd>
     inline float dot(const vec4& lhs, const vec4& rhs) {
         if constexpr (simd != simd_t::NONE) {
             // x0 = l.x * r.x, l.y * r.y, l.z * r.z, l.w * r.w
@@ -257,7 +257,7 @@ namespace sm {
     }
 
     // Compare
-    template <simd_t simd = intern::default_simd>
+    template <simd_t simd = detail::default_simd>
     inline bool compare(const vec4& lhs, const vec4& rhs) {
         if constexpr (simd != simd_t::NONE) {
             const auto eq = _mm_cmpeq_ps(lhs.xmm, rhs.xmm);

@@ -48,7 +48,7 @@ namespace sm {
 
     enum class simd_t : uint8_t { NONE, SSE2, SSE4, AVX };
 
-    namespace intern {
+    namespace detail {
 #if defined(SM_AVX)
         constexpr simd_t default_simd = simd_t::AVX;
 #elif defined(SM_SSE4)
@@ -58,7 +58,7 @@ namespace sm {
 #else
         constexpr simd_t default_simd = simd_t::NONE;
 #endif
-    } // namespace intern
+    } // namespace detail
 
 #ifdef SIMPLE_MATH_FORCE_ALIGNMENT
 #    define SIMPLE_MATH_ALIGN(x) alignas(x)

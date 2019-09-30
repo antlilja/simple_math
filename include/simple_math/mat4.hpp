@@ -234,7 +234,7 @@ namespace sm {
     };
 
     // Multiply
-    template <simd_t simd = intern::default_simd>
+    template <simd_t simd = detail::default_simd>
     inline mat4 multiply(const mat4& lhs, const mat4& rhs) {
         if constexpr (simd == simd_t::AVX) {
             __m256 a0, a1, b0, b1;
@@ -320,7 +320,7 @@ namespace sm {
     }
 
     // Compare
-    template <simd_t simd = intern::default_simd>
+    template <simd_t simd = detail::default_simd>
     inline bool compare(const mat4& lhs, const mat4& rhs) {
         if constexpr (simd != simd_t::NONE) {
             const auto eq0 = _mm_cmpeq_ps(lhs.xmm[0], rhs.xmm[0]);
@@ -355,7 +355,7 @@ namespace sm {
                 result.elements[2] / result.elements[3]};
     }
 
-    template <simd_t simd = intern::default_simd>
+    template <simd_t simd = detail::default_simd>
     inline vec4 transform_vec(const vec4& v, const mat4& m) {
         if constexpr (simd != simd_t::NONE) {
             const auto m0x = _mm_mul_ps(_mm_set1_ps(v.x), m.xmm[0]);

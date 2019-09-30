@@ -15,6 +15,7 @@
 
 namespace sm {
     constexpr float PI = 3.1415926F;
+    constexpr float TAU = 2.0F * PI;
 
     constexpr __m128 M128_SIGNMASK = {-0.0F, -0.0F, -0.0F, -0.0F};
 

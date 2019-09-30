@@ -56,12 +56,15 @@ namespace sm {
                                  ? angle
                                  : radians::from_degrees(angle);
 
-            mat3 result(1.0F);
-            result.elements[0 + 0 * 3] = cosf(rad);
-            result.elements[1 + 0 * 3] = sinf(rad);
+            const auto srad = sinf(rad);
+            const auto crad = cosf(rad);
 
-            result.elements[0 + 1 * 3] = -sinf(rad);
-            result.elements[1 + 1 * 3] = cosf(rad);
+            mat3 result(1.0F);
+            result.elements[0 + 0 * 3] = crad;
+            result.elements[1 + 0 * 3] = srad;
+
+            result.elements[0 + 1 * 3] = -srad;
+            result.elements[1 + 1 * 3] = crad;
 
             return result;
         }

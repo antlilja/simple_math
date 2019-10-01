@@ -31,11 +31,11 @@ TEST_CASE("Rotation mat3", "[mat3]") {
 
     REQUIRE(m.elements[2 + 2 * 3] == Approx(1.0f));
 
-    REQUIRE(m.elements[0 + 0 * 3] == Approx(cosf(angle)));
-    REQUIRE(m.elements[1 + 0 * 3] == Approx(sinf(angle)));
+    REQUIRE(m.elements[0 + 0 * 3] == Approx(taylor_cosine(angle)));
+    REQUIRE(m.elements[1 + 0 * 3] == Approx(taylor_sine(angle)));
 
-    REQUIRE(m.elements[0 + 1 * 3] == Approx(-sinf(angle)));
-    REQUIRE(m.elements[1 + 1 * 3] == Approx(cosf(angle)));
+    REQUIRE(m.elements[0 + 1 * 3] == Approx(-taylor_sine(angle)));
+    REQUIRE(m.elements[1 + 1 * 3] == Approx(taylor_cosine(angle)));
 }
 
 TEST_CASE("Scale mat3", "[mat3]") {

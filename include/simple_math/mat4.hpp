@@ -4,6 +4,7 @@
 #pragma once
 #include "common.hpp"
 #include "vec.hpp"
+#include "utility.hpp"
 
 #include <type_traits>
 
@@ -94,7 +95,8 @@ namespace sm {
 
         // Rotation
         template <class Angle>
-        static mat4 rotation(const Angle angle, const sm::vec3& axis) {
+        static constexpr mat4 rotation(const Angle angle,
+                                       const sm::vec3& axis) {
             static_assert(std::is_same<Angle, radians>::value ||
                               std::is_same<Angle, degrees>::value,
                           "mat4 rotation requires parameter angle in an angle "
@@ -104,8 +106,8 @@ namespace sm {
                                  ? angle
                                  : radians::from_degrees(angle);
 
-            const float s = sinf(rad);
-            const float c = cosf(rad);
+            const float s = taylor_sine(rad);
+            const float c = taylor_cosine(rad);
             const float omc = 1.0F - c;
 
             auto result = mat4::identity();
@@ -126,7 +128,7 @@ namespace sm {
         }
 
         template <class Angle>
-        static mat4 rotation_x(const Angle angle) {
+        static constexpr mat4 rotation_x(const Angle angle) {
             static_assert(std::is_same<Angle, radians>::value ||
                               std::is_same<Angle, degrees>::value,
                           "mat4 rotation requires parameter angle in an angle "
@@ -138,17 +140,17 @@ namespace sm {
 
             auto result = mat4::identity();
 
-            result.elements[1 + 1 * 4] = cosf(-rad);
-            result.elements[2 + 1 * 4] = sinf(-rad);
+            result.elements[1 + 1 * 4] = taylor_cosine(-rad);
+            result.elements[2 + 1 * 4] = taylor_sine(-rad);
 
-            result.elements[1 + 2 * 4] = -sinf(-rad);
-            result.elements[2 + 2 * 4] = cosf(-rad);
+            result.elements[1 + 2 * 4] = -taylor_sine(-rad);
+            result.elements[2 + 2 * 4] = taylor_cosine(-rad);
 
             return result;
         }
 
         template <class Angle>
-        static mat4 rotation_y(const Angle angle) {
+        static constexpr mat4 rotation_y(const Angle angle) {
             static_assert(std::is_same<Angle, radians>::value ||
                               std::is_same<Angle, degrees>::value,
                           "mat4 rotation requires parameter angle in an angle "
@@ -160,17 +162,17 @@ namespace sm {
 
             auto result = mat4::identity();
 
-            result.elements[0 + 0 * 4] = cosf(-rad);
-            result.elements[2 + 0 * 4] = -sinf(-rad);
+            result.elements[0 + 0 * 4] = taylor_cosine(-rad);
+            result.elements[2 + 0 * 4] = -taylor_sine(-rad);
 
-            result.elements[0 + 2 * 4] = sinf(-rad);
-            result.elements[2 + 2 * 4] = cosf(-rad);
+            result.elements[0 + 2 * 4] = taylor_sine(-rad);
+            result.elements[2 + 2 * 4] = taylor_cosine(-rad);
 
             return result;
         }
 
         template <class Angle>
-        static mat4 rotation_z(const Angle angle) {
+        static constexpr mat4 rotation_z(const Angle angle) {
             static_assert(std::is_same<Angle, radians>::value ||
                               std::is_same<Angle, degrees>::value,
                           "mat4 rotation requires parameter angle in an angle "
@@ -182,11 +184,11 @@ namespace sm {
 
             auto result = mat4::identity();
 
-            result.elements[0 + 0 * 4] = cosf(-rad);
-            result.elements[1 + 0 * 4] = sinf(-rad);
+            result.elements[0 + 0 * 4] = taylor_cosine(-rad);
+            result.elements[1 + 0 * 4] = taylor_sine(-rad);
 
-            result.elements[0 + 1 * 4] = -sinf(-rad);
-            result.elements[1 + 1 * 4] = cosf(-rad);
+            result.elements[0 + 1 * 4] = -taylor_sine(-rad);
+            result.elements[1 + 1 * 4] = taylor_cosine(-rad);
 
             return result;
         }

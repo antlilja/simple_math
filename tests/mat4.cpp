@@ -35,11 +35,11 @@ TEST_CASE("Rotation mat4", "[mat4]") {
     REQUIRE(m.elements[2 + 2 * 4] == Approx(1.0f));
     REQUIRE(m.elements[3 + 3 * 4] == Approx(1.0f));
 
-    REQUIRE(m.elements[0 + (0 * 4)] == Approx(cosf(angle)));
-    REQUIRE(m.elements[1 + (0 * 4)] == Approx(sinf(angle)));
+    REQUIRE(m.elements[0 + (0 * 4)] == Approx(taylor_cosine(angle)));
+    REQUIRE(m.elements[1 + (0 * 4)] == Approx(taylor_sine(angle)));
 
-    REQUIRE(m.elements[0 + (1 * 4)] == Approx(-sinf(angle)));
-    REQUIRE(m.elements[1 + (1 * 4)] == Approx(cosf(angle)));
+    REQUIRE(m.elements[0 + (1 * 4)] == Approx(-taylor_sine(angle)));
+    REQUIRE(m.elements[1 + (1 * 4)] == Approx(taylor_cosine(angle)));
 }
 
 TEST_CASE("Scale mat4", "[mat4]") {

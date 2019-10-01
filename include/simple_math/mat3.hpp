@@ -5,6 +5,7 @@
 #include "common.hpp"
 #include "vec2.hpp"
 #include "vec3.hpp"
+#include "utility.hpp"
 
 #include <type_traits>
 
@@ -56,8 +57,8 @@ namespace sm {
                                  ? angle
                                  : radians::from_degrees(angle);
 
-            const auto srad = sinf(rad);
-            const auto crad = cosf(rad);
+            const auto srad = taylor_sine(rad);
+            const auto crad = taylor_cosine(rad);
 
             mat3 result(1.0F);
             result.elements[0 + 0 * 3] = crad;

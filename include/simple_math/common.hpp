@@ -75,15 +75,15 @@ namespace sm {
 #        define SIMPLE_MATH_BREAKPOINT asm("int $3");
 #    endif
 
-#    define SIMPLE_MATH_ASSERT(x)                                    \
-        {                                                            \
-            if (!(x)) {                                              \
-                std::cerr << "Assertion: " << #x                     \
-                          << " failed in function: " << __FUNCTION__ \
-                          << " at line: " << __LINE__                \
-                          << " in file: " << __FILE__ << '\n';       \
-                SIMPLE_MATH_BREAKPOINT                               \
-            }                                                        \
+#    define SIMPLE_MATH_ASSERT(x)                                \
+        {                                                        \
+            if (!(x)) {                                          \
+                std::cerr << "Assertion: " << #x                 \
+                          << " failed in function: " << __func__ \
+                          << " at line: " << __LINE__            \
+                          << " in file: " << __FILE__ << '\n';   \
+                SIMPLE_MATH_BREAKPOINT                           \
+            }                                                    \
         }
 #else
 #    define SIMPLE_MATH_ASSERT(x)

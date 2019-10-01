@@ -19,5 +19,10 @@ target_link_libraries(simple_math_tests
 		simple::math
 )
 
+target_compile_definitions(simple_math_tests
+	PRIVATE
+		SIMPLE_MATH_ENABLE_ASSERTS
+)
+
 include(Catch)
 catch_discover_tests(simple_math_tests)

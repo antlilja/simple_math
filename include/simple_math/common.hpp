@@ -71,7 +71,7 @@ namespace sm {
 #ifdef SIMPLE_MATH_ENABLE_ASSERTS
 #    if defined(_WIN32)
 #        define SIMPLE_MATH_BREAKPOINT __debugbreak();
-#    elif defined(__linux__)
+#    elif defined(__linux__) || defined(__APPLE__)
 #        define SIMPLE_MATH_BREAKPOINT asm("int $3");
 #    endif
 

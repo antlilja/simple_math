@@ -49,6 +49,17 @@ static void mat4_vec4_transform(benchmark::State& state) {
     }
 }
 
+template <simd_t simd>
+static void mat4_to_quaternion(benchmark::State& state) {
+    constexpr auto angle = radians::from_degrees(90.0F);
+    const auto m = mat4::rotation(angle, vec3(0.0F, 0.0F, 1.0F));
+
+    for (auto _ : state) {
+        const auto q = to_quaternion<simd>(m);
+        benchmark::DoNotOptimize(q);
+    }
+}
+
 // mat4 multiply
 BENCHMARK_TEMPLATE(mat4_multiply, AVX);
 BENCHMARK_TEMPLATE(mat4_multiply, SSE4);
@@ -61,3 +72,7 @@ BENCHMARK_TEMPLATE(mat4_compare, NO_SIMD);
 // vec4 mat4 transform
 BENCHMARK_TEMPLATE(mat4_vec4_transform, SSE2);
 BENCHMARK_TEMPLATE(mat4_vec4_transform, NO_SIMD);
+
+// mat4 to quaternion
+BENCHMARK_TEMPLATE(mat4_to_quaternion, AVX);
+BENCHMARK_TEMPLATE(mat4_to_quaternion, NO_SIMD);

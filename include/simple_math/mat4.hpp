@@ -5,6 +5,7 @@
 #include "common.hpp"
 #include "vec.hpp"
 #include "utility.hpp"
+#include "quaternion.hpp"
 
 #include <type_traits>
 
@@ -127,6 +128,43 @@ namespace sm {
             return result;
         }
 
+        static constexpr mat4 rotation(quaternion q) {
+            auto result = mat4::identity();
+
+            const auto sqrw = square(q.w);
+            const auto sqrx = square(q.x);
+            const auto sqry = square(q.y);
+            const auto sqrz = square(q.z);
+
+            const auto invs = 1 / (sqrw + sqrx + sqry + sqrz);
+            result.elements[0 + 0 * 4] = (sqrx - sqry - sqrz + sqrw) * invs;
+            result.elements[1 + 1 * 4] = (-sqrx + sqry - sqrz + sqrw) * invs;
+            result.elements[2 + 2 * 4] = (-sqrx - sqry + sqrz + sqrw) * invs;
+
+            {
+                const auto qxy = q.x * q.y;
+                const auto qzw = q.z * q.w;
+                result.elements[1 + 0 * 4] = 2.0F * (qxy + qzw) * invs;
+                result.elements[0 + 1 * 4] = 2.0F * (qxy - qzw) * invs;
+            }
+
+            {
+                const auto qxz = q.x * q.z;
+                const auto qyw = q.y * q.w;
+                result.elements[2 + 0 * 4] = 2.0F * (qxz - qyw) * invs;
+                result.elements[0 + 2 * 4] = 2.0F * (qxz + qyw) * invs;
+            }
+
+            {
+                const auto qyz = q.y * q.z;
+                const auto qxw = q.x * q.w;
+                result.elements[2 + 1 * 4] = 2.0F * (qyz + qxw) * invs;
+                result.elements[1 + 2 * 4] = 2.0F * (qyz - qxw) * invs;
+            }
+
+            return result;
+        }
+
         template <class Angle>
         static constexpr mat4 rotation_x(const Angle angle) {
             static_assert(std::is_same<Angle, radians>::value ||
@@ -191,6 +229,156 @@ namespace sm {
             result.elements[1 + 1 * 4] = taylor_cosine(-rad);
 
             return result;
+        }
+
+        template <simd_t simd_level = detail::default_simd>
+        quaternion to_quaternion() const {
+            const auto qx =
+                elements[0 + 0 * 4] + elements[1 + 1 * 4] + elements[2 + 2 * 4];
+
+            const auto qy =
+                elements[0 + 0 * 4] - elements[1 + 1 * 4] - elements[2 + 2 * 4];
+
+            const auto qz = -elements[0 + 0 * 4] + elements[1 + 1 * 4] -
+                            elements[2 + 2 * 4];
+
+            const auto qw = -elements[0 + 0 * 4] - elements[1 + 1 * 4] +
+                            elements[2 + 2 * 4];
+
+            quaternion q(qx, qy, qz, qw);
+
+            if constexpr (simd_level != simd_t::NONE) {
+                q.xmm = _mm_add_ps(q.xmm, _mm_set1_ps(1.0F));
+                q.xmm = _mm_div_ps(q.xmm, _mm_set1_ps(4.0F));
+
+                if (const auto res =
+                        _mm_movemask_ps(_mm_cmplt_ps(q.xmm, _mm_setzero_ps()));
+                    (res & 0x7) == 0x7) {
+                    if (q.x < 0.0F) q.x = 0.0F;
+                    if (q.y < 0.0F) q.y = 0.0F;
+                    if (q.z < 0.0F) q.z = 0.0F;
+                    if (q.w < 0.0F) q.w = 0.0F;
+                }
+
+                q.xmm = _mm_sqrt_ps(q.xmm);
+            }
+            else {
+                q.x += 1.0F;
+                q.y += 1.0F;
+                q.z += 1.0F;
+                q.w += 1.0F;
+
+                q.x /= 4.0F;
+                q.y /= 4.0F;
+                q.z /= 4.0F;
+                q.w /= 4.0F;
+
+                if (q.x < 0.0F) q.x = 0.0F;
+                if (q.y < 0.0F) q.y = 0.0F;
+                if (q.z < 0.0F) q.z = 0.0F;
+                if (q.w < 0.0F) q.w = 0.0F;
+
+                q.x = sqrtf(q.x);
+                q.y = sqrtf(q.y);
+                q.z = sqrtf(q.z);
+                q.w = sqrtf(q.w);
+            }
+
+            const auto l_sign = [](const float x) {
+                return (x >= 0.0F) ? 1.0F : -1.0F;
+            };
+
+            if (q.x >= q.y && q.x >= q.z && q.x >= q.w) {
+                if constexpr (simd_level != simd_t::NONE) {
+                    __m128 tmp = {
+                        1.0F, l_sign(elements[2 + 1 * 4] - elements[1 + 2 * 4]),
+                        l_sign(elements[0 + 2 * 4] - elements[2 + 0 * 4]),
+                        l_sign(elements[1 + 0 * 4] - elements[0 + 1 * 4])};
+
+                    q.xmm = _mm_mul_ps(q.xmm, tmp);
+                }
+                else {
+                    // q.x *= 1.0F;
+                    q.y *= l_sign(elements[2 + 1 * 4] - elements[1 + 2 * 4]);
+                    q.z *= l_sign(elements[0 + 2 * 4] - elements[2 + 0 * 4]);
+                    q.w *= l_sign(elements[1 + 0 * 4] - elements[0 + 1 * 4]);
+                }
+            }
+            else if (q.y >= q.x && q.y >= q.z && q.y >= q.w) {
+                if constexpr (simd_level != simd_t::NONE) {
+                    q.xmm = _mm_mul_ps(
+                        q.xmm,
+                        _mm_set_ps(
+                            l_sign(elements[2 + 1 * 4] - elements[1 + 2 * 4]),
+                            1.0F,
+                            l_sign(elements[1 + 0 * 4] + elements[0 + 1 * 4]),
+                            l_sign(elements[0 + 2 * 4] + elements[2 + 0 * 4])));
+                }
+                else {
+                    q.x *= l_sign(elements[2 + 1 * 4] - elements[1 + 2 * 4]);
+                    // q.y *= 1.0F;
+                    q.z *= l_sign(elements[1 + 0 * 4] + elements[0 + 1 * 4]);
+                    q.w *= l_sign(elements[0 + 2 * 4] + elements[2 + 0 * 4]);
+                }
+            }
+            else if (q.z >= q.x && q.z >= q.y && q.z >= q.w) {
+                if constexpr (simd_level != simd_t::NONE) {
+                    q.xmm = _mm_mul_ps(
+                        q.xmm,
+                        _mm_set_ps(
+                            l_sign(elements[0 + 2 * 4] - elements[2 + 0 * 4]),
+                            l_sign(elements[1 + 0 * 4] + elements[0 + 1 * 4]),
+                            1.0F,
+                            l_sign(elements[2 + 1 * 4] + elements[1 + 2 * 4])));
+                }
+                else {
+                    q.x *= l_sign(elements[0 + 2 * 4] - elements[2 + 0 * 4]);
+                    q.y *= l_sign(elements[1 + 0 * 4] + elements[0 + 1 * 4]);
+                    // q.z *= 1.0F
+                    q.w *= l_sign(elements[2 + 1 * 4] + elements[1 + 2 * 4]);
+                }
+            }
+            else if (q.w >= q.x && q.w >= q.y && q.w >= q.z) {
+                if constexpr (simd_level != simd_t::NONE) {
+                    q.xmm = _mm_mul_ps(
+                        q.xmm,
+                        _mm_set_ps(
+                            l_sign(elements[1 + 0 * 4] - elements[0 + 1 * 4]),
+                            l_sign(elements[2 + 0 * 4] + elements[0 + 2 * 4]),
+                            l_sign(elements[2 + 1 * 4] + elements[1 + 2 * 4]),
+                            1.0F));
+                }
+                else {
+                    q.x *= l_sign(elements[1 + 0 * 4] - elements[0 + 1 * 4]);
+                    q.y *= l_sign(elements[2 + 0 * 4] + elements[0 + 2 * 4]);
+                    q.z *= l_sign(elements[2 + 1 * 4] + elements[1 + 2 * 4]);
+                    // q.w *= 1.0F;
+                }
+            }
+
+            if constexpr (simd_level >= simd_t::SSE4) {
+                q.xmm = _mm_div_ps(q.xmm,
+                                   _mm_sqrt_ps(_mm_dp_ps(q.xmm, q.xmm, 0xff)));
+            }
+            else if constexpr (simd_level != simd_t::NONE) {
+                const auto x0 = _mm_mul_ps(q.xmm, q.xmm);
+                const auto x1 = _mm_movehl_ps(x0, x0);
+                const auto x2 = _mm_add_ps(x0, x1);
+                const auto x3 = _mm_shuffle_ps(x2, x2, _MM_SHUFFLE(0, 0, 0, 1));
+                const auto x4 = _mm_add_ps(x2, x3);
+                const auto dp = _mm_sqrt_ps(x4);
+                q.xmm = _mm_div_ps(q.xmm, dp);
+            }
+            else {
+                const auto dp = sqrtf(square(q.x) + square(q.y) + square(q.z) +
+                                      square(q.w));
+                q.x /= dp;
+                q.y /= dp;
+                q.z /= dp;
+                q.w /= dp;
+            }
+
+            return q;
         }
 
         // Scale
@@ -342,6 +530,11 @@ namespace sm {
             }
             return true;
         }
+    }
+
+    template <simd_t simd_level = detail::default_simd>
+    inline quaternion to_quaternion(const mat4& mat) {
+        return mat.to_quaternion();
     }
 
     // Vector matrix multiplication

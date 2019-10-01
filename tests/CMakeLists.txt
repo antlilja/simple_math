@@ -10,6 +10,8 @@ add_executable(simple_math_tests
 
 	mat3.cpp
 	mat4.cpp
+
+	trig.cpp
 )
 
 target_link_libraries(simple_math_tests

@@ -14,6 +14,8 @@ add_executable(simple_math_bench
 
     mat3.cpp
     mat4.cpp
+
+    trig.cpp
 )
 
 target_compile_options(simple_math_bench

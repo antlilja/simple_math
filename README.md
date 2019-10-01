@@ -13,10 +13,12 @@ A header-only C++ math library for games and rendering that conforms to the vulk
 - [Color functions](include/simple_math/color.hpp)
 - [Angle types for radians and degrees](include/simple_math/common.hpp)
 - [Templated ostream operators for all types](include/simple_math/io.hpp)
+- [Constexpr trigonometric functions (sine and cosine)](include/simple_math/utility.hpp)
+     - Approximations implemented using taylor polynomials
 
 ## Todo
 - Quaternions
-- Constexpr trig functions
+- Constexpr tangent function
 
 ## Using
 - CMake

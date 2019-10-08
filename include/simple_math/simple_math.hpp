@@ -7,4 +7,5 @@
 #include "vec.hpp"
 #include "mat.hpp"
 #include "color.hpp"
+#include "trig.hpp"
 #include "io.hpp"

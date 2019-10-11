@@ -11,8 +11,8 @@ namespace sm {
             const auto x3 = x2 * angle;
             const auto x5 = x3 * x2;
 
-            return (angle - (x3 / factorial<float>(3)) +
-                    (x5 / factorial<float>(5)));
+            return (angle - (x3 * (1.0F / factorial<float>(3))) +
+                    (x5 * (1.0F / factorial<float>(5))));
         }
 
         inline constexpr float taylor_cosine_impl(const float angle) {
@@ -23,8 +23,8 @@ namespace sm {
             const auto x3 = x2 * x;
             const auto x5 = x3 * x2;
 
-            return (-x + (x3 / factorial<float>(3)) -
-                    (x5 / factorial<float>(5)));
+            return (-x + (x3 * (1.0F / factorial<float>(3))) -
+                    (x5 * (1.0F / factorial<float>(5))));
         }
     } // namespace detail
 

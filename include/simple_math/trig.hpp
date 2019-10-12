@@ -96,12 +96,4 @@ namespace sm {
 
         return detail::taylor_cosine_impl(angle_radians);
     }
-
-    // static constexpr auto sine_loopup = []() {
-    //     std::array<float, 360> lookup{};
-    //     for (int32_t i = 0; i < 360; ++i) {
-    //         lookup[i] = taylor_sine(static_cast<float>(i));
-    //     }
-    //     return lookup;
-    // }();
 } // namespace sm

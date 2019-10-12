@@ -32,62 +32,76 @@ namespace sm {
     template <bool negative_pi_pi_bounded = false,
               bool negative_hpi_hpi_bounded = false, typename Angle>
     inline constexpr float taylor_sine(const Angle angle) {
-        static_assert(std::is_same<Angle, radians>::value ||
-                          std::is_same<Angle, degrees>::value,
+        // Type checking
+        constexpr bool is_radians = std::is_same<Angle, radians>::value;
+        constexpr bool is_degrees = std::is_same<Angle, degrees>::value;
+        static_assert(is_radians || is_degrees,
                       "taylor_sine requires an angle "
                       "type, i.e sm::radians or sm::degrees");
 
-        auto a = static_cast<float>(std::is_same<Angle, radians>::value
-                                        ? angle
-                                        : radians::from_degrees(angle));
+        // Function handles angle in radians
+        // If angle is in degrees a conversion is performed
+        float angle_radians = is_radians ? angle : radians::from_degrees(angle);
 
         // Is angle bounded between -π and π?
         if constexpr (!negative_pi_pi_bounded) {
             // Constrain a between -π and π
-            a -= TAU * std::floor((a + PI) * (1.0F / TAU));
+            const auto x = (angle_radians + PI) * (1.0F / TAU);
+            angle_radians -= TAU * std::floor(x);
         }
 
         // Is angle bounded between -π/2 and π/2?
         if constexpr (!negative_hpi_hpi_bounded) {
             // Is angle between π/2 and π?
-            if (a > HALF_PI) {
-                return detail::taylor_sine_impl(PI - a);
+            if (angle_radians > HALF_PI) {
+                return detail::taylor_sine_impl(PI - angle_radians);
             }
             // Is angle between -π/2 and -π?
-            else if (a < -HALF_PI) {
-                return -detail::taylor_sine_impl(PI + a);
+            else if (angle_radians < -HALF_PI) {
+                return -detail::taylor_sine_impl(PI + angle_radians);
             }
         }
 
-        return detail::taylor_sine_impl(a);
+        return detail::taylor_sine_impl(angle_radians);
     }
 
     template <bool zero_tau_bounded = false, bool zero_pi_bounded = false,
               typename Angle>
     inline constexpr float taylor_cosine(const Angle angle) {
-        static_assert(std::is_same<Angle, radians>::value ||
-                          std::is_same<Angle, degrees>::value,
+        // Type checking
+        constexpr bool is_radians = std::is_same<Angle, radians>::value;
+        constexpr bool is_degrees = std::is_same<Angle, degrees>::value;
+        static_assert(is_radians || is_degrees,
                       "taylor_cosine requires an angle "
                       "type, i.e sm::radians or sm::degrees");
 
-        auto a = static_cast<float>(std::is_same<Angle, radians>::value
-                                        ? angle
-                                        : radians::from_degrees(angle));
+        // Function handles angle in radians
+        // If angle is in degrees a conversion is performed
+        float angle_radians = is_radians ? angle : radians::from_degrees(angle);
 
         // Is angle bounded between 0 and τ?
         if constexpr (!zero_tau_bounded) {
             // Constrain a between 0 and 2π
-            a -= TAU * std::floor(a * (1.0F / TAU));
+            const auto x = angle_radians * (1.0F / TAU);
+            angle_radians -= TAU * std::floor(x);
         }
 
         // Is angle between 0 and π?
         if constexpr (!zero_pi_bounded) {
             // Is a is between π and 2π?
-            if (a > PI) {
-                return -detail::taylor_cosine_impl(a - PI);
+            if (angle_radians > PI) {
+                return -detail::taylor_cosine_impl(angle_radians - PI);
             }
         }
 
-        return detail::taylor_cosine_impl(a);
+        return detail::taylor_cosine_impl(angle_radians);
     }
+
+    // static constexpr auto sine_loopup = []() {
+    //     std::array<float, 360> lookup{};
+    //     for (int32_t i = 0; i < 360; ++i) {
+    //         lookup[i] = taylor_sine(static_cast<float>(i));
+    //     }
+    //     return lookup;
+    // }();
 } // namespace sm

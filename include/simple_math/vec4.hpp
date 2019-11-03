@@ -73,10 +73,9 @@ namespace sm {
         template <simd_t simd = detail::default_simd>
         inline vec4 normalize() const {
             if constexpr (simd >= simd_t::SSE4) {
-                const auto x = _mm_sqrt_ps(_mm_dp_ps(xmm, xmm, 0xff));
-
+                const auto x = _mm_dp_ps(xmm, xmm, 0xff);
                 SIMPLE_MATH_ASSERT(_mm_cvtss_f32(x) != 0.0F);
-                return _mm_div_ps(xmm, x);
+                return _mm_mul_ps(xmm, _mm_rsqrt_ps(x));
             }
             else if constexpr (simd != simd_t::NONE) {
                 // x0 = x^2, y^2, z^2, w^2
@@ -96,10 +95,10 @@ namespace sm {
                 const auto x3 = _mm_shuffle_ps(x2, x2, _MM_SHUFFLE(0, 1, 0, 1));
                 const auto x4 = _mm_shuffle_ps(x2, x2, _MM_SHUFFLE(1, 0, 1, 0));
                 const auto x5 = _mm_add_ps(x3, x4);
-                const auto x6 = _mm_sqrt_ps(x5);
-
-                SIMPLE_MATH_ASSERT(_mm_cvtss_f32(x6) != 0.0F);
-                return _mm_div_ps(xmm, x6);
+                
+                SIMPLE_MATH_ASSERT(_mm_cvtss_f32(x5) != 0.0F);
+                const auto x6 = _mm_rsqrt_ps(x5);
+                return _mm_mul_ps(xmm, x6);
             }
             else {
                 const auto mag = magnitude<simd>();
@@ -112,10 +111,9 @@ namespace sm {
         template <simd_t simd = detail::default_simd>
         inline vec4 normalize_fast() const {
             if constexpr (simd >= simd_t::SSE4) {
-                const auto x = _mm_rsqrt_ps(_mm_dp_ps(xmm, xmm, 0xff));
-
+                const auto x = _mm_dp_ps(xmm, xmm, 0xff);
                 SIMPLE_MATH_ASSERT(_mm_cvtss_f32(x) != 0.0F);
-                return _mm_mul_ps(xmm, x);
+                return _mm_mul_ps(xmm, _mm_rsqrt_ps(x));
             }
             else if constexpr (simd != simd_t::NONE) {
                 // x0 = x^2, y^2, z^2, w^2

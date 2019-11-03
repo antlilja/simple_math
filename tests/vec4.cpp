@@ -57,10 +57,10 @@ TEMPLATE_TEST_CASE_SIG("Magnitude and normilization of vec4", "[vec4],[simd]",
     SECTION("Normalization works") {
         const float ans = 0.5f;
         const auto calc = v.normalize<S>();
-        REQUIRE(calc.x == Approx(ans));
-        REQUIRE(calc.y == Approx(ans));
-        REQUIRE(calc.z == Approx(ans));
-        REQUIRE(calc.w == Approx(ans));
+        REQUIRE(calc.x == Approx(ans).epsilon(0.01F));
+        REQUIRE(calc.y == Approx(ans).epsilon(0.01F));
+        REQUIRE(calc.z == Approx(ans).epsilon(0.01F));
+        REQUIRE(calc.w == Approx(ans).epsilon(0.01F));
     }
 
     SECTION("Fast normalization works") {

@@ -9,16 +9,13 @@
 #include <type_traits>
 
 namespace sm {
-    struct SIMPLE_MATH_ALIGN(32) mat4 {
+    union SIMPLE_MATH_ALIGN(32) mat4 {
         // Data
-        union {
-            float elements[16];
-            vec4 columns[4];
+        float elements[16];
+        vec4 columns[4];
 
-            // SIMD
-            __m128 xmm[4];
-            __m256 ymm[2];
-        };
+        __m128 xmm[4];
+        __m256 ymm[2];
 
         // Constructors
         inline constexpr mat4()

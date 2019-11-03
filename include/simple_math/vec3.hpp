@@ -6,20 +6,16 @@
 #include "utility.hpp"
 
 namespace sm {
-    struct SIMPLE_MATH_ALIGN(16) vec3 {
+    union SIMPLE_MATH_ALIGN(16) vec3 {
         // Data
-        union {
-            float elements[3];
+        float elements[3];
 
-            // Transform
-            struct {
-                float x, y, z;
-            };
+        struct {
+            float x, y, z;
+        };
 
-            // Color
-            struct {
-                float r, g, b;
-            };
+        struct {
+            float r, g, b;
         };
 
         // Constructors

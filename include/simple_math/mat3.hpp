@@ -10,12 +10,10 @@
 #include <type_traits>
 
 namespace sm {
-    struct mat3 {
+    union mat3 {
         // Data
-        union {
-            float elements[9];
-            vec3 columns[3];
-        };
+        float elements[9];
+        vec3 columns[3];
 
         // Constructors
         inline constexpr mat3()

@@ -7,24 +7,19 @@
 #include "vec3.hpp"
 
 namespace sm {
-    struct SIMPLE_MATH_ALIGN(16) vec4 {
+    union SIMPLE_MATH_ALIGN(16) vec4 {
         // Data
-        union {
-            float elements[4];
+        float elements[4];
 
-            // Transform
-            struct {
-                float x, y, z, w;
-            };
-
-            // Color
-            struct {
-                float r, g, b, a;
-            };
-
-            // SIMD
-            __m128 xmm;
+        struct {
+            float x, y, z, w;
         };
+
+        struct {
+            float r, g, b, a;
+        };
+
+        __m128 xmm;
 
         // Constructors
         inline constexpr vec4() : elements{0.0F, 0.0F, 0.0F, 0.0F} {}

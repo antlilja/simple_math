@@ -6,14 +6,12 @@
 #include "utility.hpp"
 
 namespace sm {
-    struct SIMPLE_MATH_ALIGN(8) vec2 {
+    union SIMPLE_MATH_ALIGN(8) vec2 {
         // Data
-        union {
-            float elements[2];
+        float elements[2];
 
-            struct {
-                float x, y;
-            };
+        struct {
+            float x, y;
         };
 
         // Constructors

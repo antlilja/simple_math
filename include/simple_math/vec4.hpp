@@ -19,6 +19,8 @@ namespace sm {
             float r, g, b, a;
         };
 
+        vec3 xyz;
+
         __m128 xmm;
 
         // Constructors
@@ -95,7 +97,7 @@ namespace sm {
                 const auto x3 = _mm_shuffle_ps(x2, x2, _MM_SHUFFLE(0, 1, 0, 1));
                 const auto x4 = _mm_shuffle_ps(x2, x2, _MM_SHUFFLE(1, 0, 1, 0));
                 const auto x5 = _mm_add_ps(x3, x4);
-                
+
                 SIMPLE_MATH_ASSERT(_mm_cvtss_f32(x5) != 0.0F);
                 const auto x6 = _mm_rsqrt_ps(x5);
                 return _mm_mul_ps(xmm, x6);

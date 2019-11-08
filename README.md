@@ -1,5 +1,5 @@
 # simple_math
-A header-only C++ math library for games and rendering that conforms to the vulkan API.
+A header-only C++ vector math library for games and rendering.
 
 ## Features
 - SIMD (SSE to AVX)

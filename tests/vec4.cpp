@@ -53,6 +53,9 @@ TEMPLATE_TEST_CASE_SIG("Magnitude and normilization of vec4", "[vec4],[simd]",
     vec4 v(2.0f);
 
     SECTION("Magnitude works") { REQUIRE(v.magnitude<S>() == Approx(4.0f)); }
+    SECTION("Square magnitude works") {
+        REQUIRE(v.square_magnitude<S>() == Approx(16.0f));
+    }
 
     SECTION("Normalization works") {
         const float ans = 0.5f;

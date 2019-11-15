@@ -22,6 +22,16 @@ static void vec4_magnitude(benchmark::State& state) {
 }
 
 template <simd_t simd>
+static void vec4_square_magnitude(benchmark::State& state) {
+    const auto v = vec4(2.0f);
+
+    benchmark::DoNotOptimize(v);
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(v.square_magnitude<simd>());
+    }
+}
+
+template <simd_t simd>
 static void vec4_normalize(benchmark::State& state) {
     const auto v = vec4(2.0f);
 

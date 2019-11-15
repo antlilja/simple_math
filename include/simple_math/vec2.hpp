@@ -26,7 +26,8 @@ namespace sm {
 
         inline constexpr vec2 operator-() const { return inverse(); }
 
-        inline float magnitude() const { return sqrtf(x * x + y * y); }
+        constexpr float square_magnitude() const { return x * x + y * y; }
+        inline float magnitude() const { return std::sqrt(square_magnitude()); }
 
         inline vec2 normalize() const {
             const auto mag = magnitude();
@@ -36,7 +37,7 @@ namespace sm {
         }
 
         inline vec2 normalize_fast() const {
-            const auto sqr_mag = x * x + y * y;
+            const auto sqr_mag = square_magnitude();
 
             SIMPLE_MATH_ASSERT(sqr_mag != 0.0F);
             const auto inv_sqrt = fast_inverse_sqrt(sqr_mag);

@@ -12,7 +12,7 @@ A header-only C++ vector math library for games and rendering.
      - [mat4](include/simple_math/mat4.hpp) SIMD
 - [Color functions](include/simple_math/color.hpp)
 - [Angle types for radians and degrees](include/simple_math/common.hpp)
-- [Templated ostream operators for all types](include/simple_math/io.hpp)
+- [Ostream operators for all types](include/simple_math/io.hpp)
 - [Constexpr trigonometric functions (sine and cosine)](include/simple_math/utility.hpp)
      - Approximations implemented using taylor polynomials
 

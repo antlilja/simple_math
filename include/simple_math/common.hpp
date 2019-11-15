@@ -51,11 +51,11 @@ namespace sm {
     enum class simd_t : uint8_t { NONE, SSE2, SSE4, AVX };
 
     namespace detail {
-#if defined(SM_AVX)
+#if defined(SIMPLE_MATH_AVX)
         constexpr simd_t default_simd = simd_t::AVX;
-#elif defined(SM_SSE4)
+#elif defined(SIMPLE_MATH_SSE4)
         constexpr simd_t default_simd = simd_t::SSE4;
-#elif defined(SM_SSE2)
+#elif defined(SIMPLE_MATH_SSE2)
         constexpr simd_t default_simd = simd_t::SSE2;
 #else
         constexpr simd_t default_simd = simd_t::NONE;

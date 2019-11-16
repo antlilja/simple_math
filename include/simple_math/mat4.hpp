@@ -29,8 +29,7 @@ namespace sm {
             elements[3 + 3 * 4] = diagonal;
         }
 
-        inline mat4(__m256 ymm0, __m256 ymm1)
-            : ymm{std::move(ymm0), std::move(ymm1)} {}
+        inline mat4(__m256 ymm0, __m256 ymm1) : ymm{ymm0, ymm1} {}
 
         inline static constexpr mat4 identity() { return mat4(1.0F); }
 

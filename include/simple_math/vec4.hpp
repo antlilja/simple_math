@@ -34,7 +34,7 @@ namespace sm {
         inline constexpr vec4(float _x, float _y, float _z, float _w)
             : elements{_x, _y, _z, _w} {}
 
-        inline constexpr vec4(__m128 _xmm) : xmm(std::move(_xmm)) {}
+        inline constexpr vec4(__m128 _xmm) : xmm(_xmm) {}
 
         // Operations
         template <simd_t simd = detail::default_simd>

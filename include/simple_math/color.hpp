@@ -24,16 +24,16 @@ namespace sm {
 
     inline constexpr uint32_t pack_rgb_to_u32(const vec3& c) {
         return (static_cast<uint32_t>(1) << 24) |
-               (round_up_to<uint32_t>(c.b) << 16) |
-               (round_up_to<uint32_t>(c.g) << 8) |
-               (round_up_to<uint32_t>(c.r) << 0);
+               (ceil_positive_to<uint32_t>(c.b) << 16) |
+               (ceil_positive_to<uint32_t>(c.g) << 8) |
+               (ceil_positive_to<uint32_t>(c.r) << 0);
     }
 
     inline constexpr uint32_t pack_rgba_to_u32(const vec4& c) {
-        return ((round_up_to<uint32_t>(c.a) << 24) |
-                (round_up_to<uint32_t>(c.b) << 16) |
-                (round_up_to<uint32_t>(c.g) << 8) |
-                (round_up_to<uint32_t>(c.r) << 0));
+        return ((ceil_positive_to<uint32_t>(c.a) << 24) |
+                (ceil_positive_to<uint32_t>(c.b) << 16) |
+                (ceil_positive_to<uint32_t>(c.g) << 8) |
+                (ceil_positive_to<uint32_t>(c.r) << 0));
     }
 
     inline constexpr vec3 unpack_rgb_to_u32(uint32_t c) {
@@ -53,16 +53,16 @@ namespace sm {
 
     inline constexpr uint32_t pack_bgr_to_u32(const vec3& c) {
         return (static_cast<uint32_t>(1) << 24) |
-               (round_up_to<uint32_t>(c.r) << 16) |
-               (round_up_to<uint32_t>(c.g) << 8) |
-               (round_up_to<uint32_t>(c.b) << 0);
+               (ceil_positive_to<uint32_t>(c.r) << 16) |
+               (ceil_positive_to<uint32_t>(c.g) << 8) |
+               (ceil_positive_to<uint32_t>(c.b) << 0);
     }
 
     inline constexpr uint32_t pack_bgra_to_u32(const vec4& c) {
-        return ((round_up_to<uint32_t>(c.a) << 24) |
-                (round_up_to<uint32_t>(c.r) << 16) |
-                (round_up_to<uint32_t>(c.g) << 8) |
-                (round_up_to<uint32_t>(c.b) << 0));
+        return ((ceil_positive_to<uint32_t>(c.a) << 24) |
+                (ceil_positive_to<uint32_t>(c.r) << 16) |
+                (ceil_positive_to<uint32_t>(c.g) << 8) |
+                (ceil_positive_to<uint32_t>(c.b) << 0));
     }
 
     inline constexpr vec3 unpack_bgr_to_u32(const uint32_t c) {

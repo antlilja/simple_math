@@ -8,15 +8,16 @@
 #include <type_traits>
 
 namespace sm {
-    template <typename T, typename F>
-    inline constexpr T round_up_to(const F f) {
-        static_assert(std::is_arithmetic<T>::value,
-                      "round_up_to requires arithmetic type");
+    template <typename To, typename From>
+    inline constexpr To ceil_positive_to(const From f) {
+        static_assert(std::is_arithmetic<To>::value,
+                      "ceil_positive_to requires To to be an arithmetic type");
 
-        static_assert(std::is_floating_point<F>::value,
-                      "round_up_to requires f to be a floating point type");
+        static_assert(
+            std::is_floating_point<From>::value,
+            "ceil_positive_to requires From to be a floating point type");
 
-        return static_cast<T>(f + static_cast<F>(0.5));
+        return static_cast<To>(f + static_cast<From>(0.5));
     }
 
     template <typename T>
@@ -53,7 +54,7 @@ namespace sm {
     template <typename F>
     inline constexpr auto to_radians(const F degrees) {
         static_assert(std::is_arithmetic<F>::value,
-                      "round_up_to requires arithmetic type");
+                      "to_radians requires arithmetic type");
 
         return degrees * (PI / static_cast<F>(180.0));
     }
@@ -61,7 +62,7 @@ namespace sm {
     template <typename F>
     inline constexpr auto to_degrees(const F radians) {
         static_assert(std::is_arithmetic<F>::value,
-                      "round_up_to requires arithmetic type");
+                      "to_degrees requires arithmetic type");
 
         return radians * (static_cast<F>(180.0) / PI);
     }

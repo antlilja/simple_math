@@ -62,7 +62,7 @@ namespace sm {
 
             const auto rad_fov = is_radians ? fov : radians::from_degrees(fov);
 
-            const float top = tanf(rad_fov / 2.0F) * _near;
+            const float top = std::tan(rad_fov * 0.5F) * _near;
 
             mat4 result;
             result.elements[0 + 0 * 4] = _near / (aspect_ratio * top);

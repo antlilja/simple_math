@@ -199,6 +199,10 @@ namespace sm {
         return multiply(v, scalar);
     }
 
+    inline vec4 operator*(const float scalar, const vec4& v) {
+        return multiply(v, scalar);
+    }
+
     inline vec4& operator*=(vec4& v, const float scalar) {
         return v = multiply(v, scalar);
     }

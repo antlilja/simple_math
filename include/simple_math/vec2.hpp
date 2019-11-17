@@ -82,6 +82,10 @@ namespace sm {
         return multiply(v, scalar);
     }
 
+    inline constexpr vec2 operator*(const float scalar, const vec2& v) {
+        return multiply(v, scalar);
+    }
+
     inline constexpr vec2& operator*=(vec2& v, const float scalar) {
         return v = multiply(v, scalar);
     }

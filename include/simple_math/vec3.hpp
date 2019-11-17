@@ -90,6 +90,10 @@ namespace sm {
         return multiply(v, scalar);
     }
 
+    inline constexpr vec3 operator*(const float scalar, const vec3& v) {
+        return multiply(v, scalar);
+    }
+
     inline constexpr vec3& operator*=(vec3& v, const float scalar) {
         return v = multiply(v, scalar);
     }

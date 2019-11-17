@@ -18,8 +18,6 @@ namespace sm {
     constexpr float TAU = 2.0F * PI;
     constexpr float HALF_PI = PI / 2.0F;
 
-    constexpr __m128 M128_SIGNMASK = {-0.0F, -0.0F, -0.0F, -0.0F};
-
     class radians {
     public:
         inline constexpr explicit radians(const float angle) : m_angle(angle) {}
@@ -60,6 +58,8 @@ namespace sm {
 #else
         constexpr simd_t default_simd = simd_t::NONE;
 #endif
+
+        constexpr __m128 m128_signmask = {-0.0F, -0.0F, -0.0F, -0.0F};
     } // namespace detail
 
 #ifdef SIMPLE_MATH_FORCE_ALIGNMENT

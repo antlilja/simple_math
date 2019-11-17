@@ -39,8 +39,9 @@ namespace sm {
         // Operations
         template <simd_t simd = detail::default_simd>
         inline vec4 inverse() const {
-            return simd != simd_t::NONE ? vec4(_mm_xor_ps(xmm, M128_SIGNMASK))
-                                        : vec4(-x, -y, -z, -w);
+            return simd != simd_t::NONE
+                       ? vec4(_mm_xor_ps(xmm, detail::m128_signmask))
+                       : vec4(-x, -y, -z, -w);
         }
 
         inline vec4 operator-() const { return inverse(); }

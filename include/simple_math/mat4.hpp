@@ -52,14 +52,15 @@ namespace sm {
         template <class Angle>
         static mat4 perspective(const Angle fov, float aspect_ratio,
                                 float _near, float _far) {
-            static_assert(std::is_same<Angle, radians>::value ||
-                              std::is_same<Angle, degrees>::value,
-                          "mat4 rotation requires parameter angle in an angle "
-                          "type, i.e sm::radians or sm::degrees");
+            constexpr bool is_radians = std::is_same<Angle, radians>::value;
+            constexpr bool is_degrees = std::is_same<Angle, degrees>::value;
 
-            const auto rad_fov = std::is_same<Angle, radians>::value
-                                     ? fov
-                                     : radians::from_degrees(fov);
+            static_assert(
+                is_radians || is_degrees,
+                "mat4 perspective requires parameter angle in an angle "
+                "type, i.e sm::radians or sm::degrees");
+
+            const auto rad_fov = is_radians ? fov : radians::from_degrees(fov);
 
             const float top = tanf(rad_fov / 2.0F) * _near;
 
@@ -93,14 +94,14 @@ namespace sm {
         template <class Angle>
         static constexpr mat4 rotation(const Angle angle,
                                        const sm::vec3& axis) {
-            static_assert(std::is_same<Angle, radians>::value ||
-                              std::is_same<Angle, degrees>::value,
+            constexpr bool is_radians = std::is_same<Angle, radians>::value;
+            constexpr bool is_degrees = std::is_same<Angle, degrees>::value;
+
+            static_assert(is_radians || is_degrees,
                           "mat4 rotation requires parameter angle in an angle "
                           "type, i.e sm::radians or sm::degrees");
 
-            const auto rad = std::is_same<Angle, radians>::value
-                                 ? angle
-                                 : radians::from_degrees(angle);
+            const auto rad = is_radians ? angle : radians::from_degrees(angle);
 
             const float s = taylor_sine(rad);
             const float c = taylor_cosine(rad);
@@ -125,14 +126,14 @@ namespace sm {
 
         template <class Angle>
         static constexpr mat4 rotation_x(const Angle angle) {
-            static_assert(std::is_same<Angle, radians>::value ||
-                              std::is_same<Angle, degrees>::value,
+            constexpr bool is_radians = std::is_same<Angle, radians>::value;
+            constexpr bool is_degrees = std::is_same<Angle, degrees>::value;
+
+            static_assert(is_radians || is_degrees,
                           "mat4 rotation requires parameter angle in an angle "
                           "type, i.e sm::radians or sm::degrees");
 
-            const auto rad = std::is_same<Angle, radians>::value
-                                 ? angle
-                                 : radians::from_degrees(angle);
+            const auto rad = is_radians ? angle : radians::from_degrees(angle);
 
             auto result = mat4::identity();
 
@@ -147,14 +148,14 @@ namespace sm {
 
         template <class Angle>
         static constexpr mat4 rotation_y(const Angle angle) {
-            static_assert(std::is_same<Angle, radians>::value ||
-                              std::is_same<Angle, degrees>::value,
+            constexpr bool is_radians = std::is_same<Angle, radians>::value;
+            constexpr bool is_degrees = std::is_same<Angle, degrees>::value;
+
+            static_assert(is_radians || is_degrees,
                           "mat4 rotation requires parameter angle in an angle "
                           "type, i.e sm::radians or sm::degrees");
 
-            const auto rad = std::is_same<Angle, radians>::value
-                                 ? angle
-                                 : radians::from_degrees(angle);
+            const auto rad = is_radians ? angle : radians::from_degrees(angle);
 
             auto result = mat4::identity();
 
@@ -169,14 +170,14 @@ namespace sm {
 
         template <class Angle>
         static constexpr mat4 rotation_z(const Angle angle) {
-            static_assert(std::is_same<Angle, radians>::value ||
-                              std::is_same<Angle, degrees>::value,
+            constexpr bool is_radians = std::is_same<Angle, radians>::value;
+            constexpr bool is_degrees = std::is_same<Angle, degrees>::value;
+
+            static_assert(is_radians || is_degrees,
                           "mat4 rotation requires parameter angle in an angle "
                           "type, i.e sm::radians or sm::degrees");
 
-            const auto rad = std::is_same<Angle, radians>::value
-                                 ? angle
-                                 : radians::from_degrees(angle);
+            const auto rad = is_radians ? angle : radians::from_degrees(angle);
 
             auto result = mat4::identity();
 

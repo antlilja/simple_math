@@ -5,6 +5,8 @@
 #include "common.hpp"
 #include "utility.hpp"
 
+#include "assert.hpp"
+
 namespace sm {
     union SIMPLE_MATH_ALIGN(8) vec2 {
         // Data

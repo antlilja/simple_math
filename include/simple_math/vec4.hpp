@@ -3,8 +3,10 @@
 
 #pragma once
 #include "common.hpp"
-#include "utility.hpp"
 #include "vec3.hpp"
+#include "simd.hpp"
+
+#include "assert.hpp"
 
 namespace sm {
     union SIMPLE_MATH_ALIGN(16) vec4 {

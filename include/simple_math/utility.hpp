@@ -3,6 +3,7 @@
 
 #pragma once
 #include "common.hpp"
+#include "constants.hpp"
 #include "type_traits.hpp"
 
 #include <type_traits>

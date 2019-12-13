@@ -5,23 +5,21 @@
 #include "vec.hpp"
 #include "mat.hpp"
 
-template <typename OStream>
-inline OStream& operator<<(OStream& os, const sm::vec2& v) {
+#include <ostream>
+
+inline std::ostream& operator<<(std::ostream& os, const sm::vec2& v) {
     return os << '[' << v.x << ", " << v.y << ']';
 }
 
-template <typename OStream>
-inline OStream& operator<<(OStream& os, const sm::vec3& v) {
+inline std::ostream& operator<<(std::ostream& os, const sm::vec3& v) {
     return os << '[' << v.x << ", " << v.y << ", " << v.z << ']';
 }
 
-template <typename OStream>
-inline OStream& operator<<(OStream& os, const sm::vec4& v) {
+inline std::ostream& operator<<(std::ostream& os, const sm::vec4& v) {
     return os << '[' << v.x << ", " << v.y << ", " << v.z << ", " << v.w << ']';
 }
 
-template <typename OStream>
-inline OStream& operator<<(OStream& os, const sm::mat3& m) {
+inline std::ostream& operator<<(std::ostream& os, const sm::mat3& m) {
     return os << '[' << m.elements[0 + 0 * 3] << ", " << m.elements[0 + 1 * 3]
               << ", " << m.elements[0 + 2 * 3] << "]\n["
 
@@ -32,8 +30,7 @@ inline OStream& operator<<(OStream& os, const sm::mat3& m) {
               << m.elements[2 + 2 * 3] << "]\n";
 }
 
-template <typename OStream>
-inline OStream& operator<<(OStream& os, const sm::mat4& m) {
+inline std::ostream& operator<<(std::ostream& os, const sm::mat4& m) {
     return os << '[' << m.elements[0 + 0 * 4] << ", " << m.elements[0 + 1 * 4]
               << ", " << m.elements[0 + 2 * 4] << ", " << m.elements[0 + 3 * 4]
               << "]\n["

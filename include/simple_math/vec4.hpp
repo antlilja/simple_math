@@ -3,8 +3,10 @@
 
 #pragma once
 #include "common.hpp"
-#include "utility.hpp"
 #include "vec3.hpp"
+#include "simd.hpp"
+
+#include "assert.hpp"
 
 namespace sm {
     union SIMPLE_MATH_ALIGN(16) vec4 {
@@ -34,42 +36,44 @@ namespace sm {
         inline constexpr vec4(float _x, float _y, float _z, float _w)
             : elements{_x, _y, _z, _w} {}
 
-        inline constexpr vec4(__m128 _xmm) : xmm(std::move(_xmm)) {}
+        inline constexpr vec4(__m128 _xmm) : xmm(_xmm) {}
 
         // Operations
         template <simd_t simd = detail::default_simd>
         inline vec4 inverse() const {
-            return simd != simd_t::NONE ? vec4(_mm_xor_ps(xmm, M128_SIGNMASK))
-                                        : vec4(-x, -y, -z, -w);
+            return simd != simd_t::NONE
+                       ? vec4(_mm_xor_ps(xmm, detail::m128_signmask))
+                       : vec4(-x, -y, -z, -w);
         }
 
         inline vec4 operator-() const { return inverse(); }
 
         template <simd_t simd = detail::default_simd>
-        inline float magnitude() const {
+        inline float square_magnitude() const {
             if constexpr (simd >= simd_t::SSE4) {
-                return _mm_cvtss_f32(_mm_sqrt_ss(_mm_dp_ps(xmm, xmm, 0xff)));
+                return _mm_cvtss_f32(_mm_dp_ps(xmm, xmm, 0xff));
             }
             else if constexpr (simd != simd_t::NONE) {
                 // x0 = x^2, y^2, z^2, w^2
                 // x1 = x^2, y^2, x^2, y^2
                 // x2 = 2(x^2), 2(y^2), x^2 + z^2, y^2 + w^2
                 // x3 = x^2 + z^2, y^2 + w^2, y^2 + w^2, y^2 + w^2
-                // x4 = x^2 + y^2 + z^2 + w^2, ??
-                // x5 = sqrt(x^2 + y^2 + z^2 + w^2)
-                // ret sqrt(x^2 + y^2 + z^2 + w^2)
+                // ret x^2 + y^2 + z^2 + w^2
 
                 const auto x0 = _mm_mul_ps(xmm, xmm);
                 const auto x1 = _mm_movehl_ps(x0, x0);
                 const auto x2 = _mm_add_ps(x0, x1);
                 const auto x3 = _mm_shuffle_ps(x2, x2, _MM_SHUFFLE(0, 0, 0, 1));
-                const auto x4 = _mm_add_ss(x2, x3);
-                const auto x5 = _mm_sqrt_ss(x4);
-                return _mm_cvtss_f32(x5);
+                return _mm_cvtss_f32(_mm_add_ss(x2, x3));
             }
             else {
-                return sqrtf(x * x + y * y + z * z + w * w);
+                return x * x + y * y + z * z + w * w;
             }
+        }
+
+        template <simd_t simd = detail::default_simd>
+        inline float magnitude() const {
+            return std::sqrt(square_magnitude<simd>());
         }
 
         template <simd_t simd = detail::default_simd>
@@ -141,7 +145,7 @@ namespace sm {
                 return _mm_mul_ps(xmm, x6);
             }
             else {
-                const auto sqr_mag = x * x + y * y + z * z + w * w;
+                const auto sqr_mag = square_magnitude<simd>();
 
                 SIMPLE_MATH_ASSERT(sqr_mag != 0.0F);
                 const auto is = fast_inverse_sqrt(sqr_mag);
@@ -194,6 +198,10 @@ namespace sm {
     }
 
     inline vec4 operator*(const vec4& v, const float scalar) {
+        return multiply(v, scalar);
+    }
+
+    inline vec4 operator*(const float scalar, const vec4& v) {
         return multiply(v, scalar);
     }
 

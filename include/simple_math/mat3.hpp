@@ -3,9 +3,8 @@
 
 #pragma once
 #include "common.hpp"
-#include "vec2.hpp"
-#include "vec3.hpp"
-#include "utility.hpp"
+#include "trig.hpp"
+#include "vec.hpp"
 
 #include <type_traits>
 

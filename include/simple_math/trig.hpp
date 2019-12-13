@@ -1,4 +1,6 @@
 #pragma once
+#include "angle.hpp"
+#include "constants.hpp"
 #include "utility.hpp"
 
 namespace sm {

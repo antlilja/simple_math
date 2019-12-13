@@ -3,8 +3,9 @@
 
 #pragma once
 #include "common.hpp"
+#include "simd.hpp"
+#include "trig.hpp"
 #include "vec.hpp"
-#include "utility.hpp"
 
 #include <type_traits>
 
@@ -29,8 +30,7 @@ namespace sm {
             elements[3 + 3 * 4] = diagonal;
         }
 
-        inline mat4(__m256 ymm0, __m256 ymm1)
-            : ymm{std::move(ymm0), std::move(ymm1)} {}
+        inline mat4(__m256 ymm0, __m256 ymm1) : ymm{ymm0, ymm1} {}
 
         inline static constexpr mat4 identity() { return mat4(1.0F); }
 
@@ -53,16 +53,17 @@ namespace sm {
         template <class Angle>
         static mat4 perspective(const Angle fov, float aspect_ratio,
                                 float _near, float _far) {
-            static_assert(std::is_same<Angle, radians>::value ||
-                              std::is_same<Angle, degrees>::value,
-                          "mat4 rotation requires parameter angle in an angle "
-                          "type, i.e sm::radians or sm::degrees");
+            constexpr bool is_radians = std::is_same<Angle, radians>::value;
+            constexpr bool is_degrees = std::is_same<Angle, degrees>::value;
 
-            const auto rad_fov = std::is_same<Angle, radians>::value
-                                     ? fov
-                                     : radians::from_degrees(fov);
+            static_assert(
+                is_radians || is_degrees,
+                "mat4 perspective requires parameter angle in an angle "
+                "type, i.e sm::radians or sm::degrees");
 
-            const float top = tanf(rad_fov / 2.0F) * _near;
+            const auto rad_fov = is_radians ? fov : radians::from_degrees(fov);
+
+            const float top = std::tan(rad_fov * 0.5F) * _near;
 
             mat4 result;
             result.elements[0 + 0 * 4] = _near / (aspect_ratio * top);
@@ -94,14 +95,14 @@ namespace sm {
         template <class Angle>
         static constexpr mat4 rotation(const Angle angle,
                                        const sm::vec3& axis) {
-            static_assert(std::is_same<Angle, radians>::value ||
-                              std::is_same<Angle, degrees>::value,
+            constexpr bool is_radians = std::is_same<Angle, radians>::value;
+            constexpr bool is_degrees = std::is_same<Angle, degrees>::value;
+
+            static_assert(is_radians || is_degrees,
                           "mat4 rotation requires parameter angle in an angle "
                           "type, i.e sm::radians or sm::degrees");
 
-            const auto rad = std::is_same<Angle, radians>::value
-                                 ? angle
-                                 : radians::from_degrees(angle);
+            const auto rad = is_radians ? angle : radians::from_degrees(angle);
 
             const float s = taylor_sine(rad);
             const float c = taylor_cosine(rad);
@@ -126,14 +127,14 @@ namespace sm {
 
         template <class Angle>
         static constexpr mat4 rotation_x(const Angle angle) {
-            static_assert(std::is_same<Angle, radians>::value ||
-                              std::is_same<Angle, degrees>::value,
+            constexpr bool is_radians = std::is_same<Angle, radians>::value;
+            constexpr bool is_degrees = std::is_same<Angle, degrees>::value;
+
+            static_assert(is_radians || is_degrees,
                           "mat4 rotation requires parameter angle in an angle "
                           "type, i.e sm::radians or sm::degrees");
 
-            const auto rad = std::is_same<Angle, radians>::value
-                                 ? angle
-                                 : radians::from_degrees(angle);
+            const auto rad = is_radians ? angle : radians::from_degrees(angle);
 
             auto result = mat4::identity();
 
@@ -148,14 +149,14 @@ namespace sm {
 
         template <class Angle>
         static constexpr mat4 rotation_y(const Angle angle) {
-            static_assert(std::is_same<Angle, radians>::value ||
-                              std::is_same<Angle, degrees>::value,
+            constexpr bool is_radians = std::is_same<Angle, radians>::value;
+            constexpr bool is_degrees = std::is_same<Angle, degrees>::value;
+
+            static_assert(is_radians || is_degrees,
                           "mat4 rotation requires parameter angle in an angle "
                           "type, i.e sm::radians or sm::degrees");
 
-            const auto rad = std::is_same<Angle, radians>::value
-                                 ? angle
-                                 : radians::from_degrees(angle);
+            const auto rad = is_radians ? angle : radians::from_degrees(angle);
 
             auto result = mat4::identity();
 
@@ -170,14 +171,14 @@ namespace sm {
 
         template <class Angle>
         static constexpr mat4 rotation_z(const Angle angle) {
-            static_assert(std::is_same<Angle, radians>::value ||
-                              std::is_same<Angle, degrees>::value,
+            constexpr bool is_radians = std::is_same<Angle, radians>::value;
+            constexpr bool is_degrees = std::is_same<Angle, degrees>::value;
+
+            static_assert(is_radians || is_degrees,
                           "mat4 rotation requires parameter angle in an angle "
                           "type, i.e sm::radians or sm::degrees");
 
-            const auto rad = std::is_same<Angle, radians>::value
-                                 ? angle
-                                 : radians::from_degrees(angle);
+            const auto rad = is_radians ? angle : radians::from_degrees(angle);
 
             auto result = mat4::identity();
 

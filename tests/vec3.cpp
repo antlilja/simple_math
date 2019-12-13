@@ -48,6 +48,10 @@ TEST_CASE("Magnitude and normilization of vec3", "[vec3]") {
         REQUIRE(v.magnitude() == Approx(sqrtf(12.0f)));
     }
 
+    SECTION("Square magnitude works") {
+        REQUIRE(v.square_magnitude() == Approx(12.0f));
+    }
+
     SECTION("Normalization works") {
         const float ans = 2.0f / sqrtf(12.0f);
         const auto calc = v.normalize();

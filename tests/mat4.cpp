@@ -116,13 +116,13 @@ TEMPLATE_TEST_CASE_SIG("Comparison of mat4", "[mat4],[simd]",
         const auto m0 = mat4::identity();
         const auto m1 = mat4::identity();
 
-        REQUIRE(compare(m0, m1));
+        REQUIRE(compare<S>(m0, m1));
     }
 
     SECTION("Not equal matrices") {
         const auto m0 = mat4::identity();
         const auto m1 = mat4::translation(1.0f, 2.0f, 3.0f);
 
-        REQUIRE(!compare(m0, m1));
+        REQUIRE(!compare<S>(m0, m1));
     }
 }

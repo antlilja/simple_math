@@ -15,6 +15,15 @@ static void vec2_magnitude(benchmark::State& state) {
     }
 }
 
+static void vec2_square_magnitude(benchmark::State& state) {
+    const auto v = vec2(2.0f);
+
+    benchmark::DoNotOptimize(v);
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(square_magnitude(v));
+    }
+}
+
 static void vec2_normalize(benchmark::State& state) {
     const auto v = vec2(2.0f);
 

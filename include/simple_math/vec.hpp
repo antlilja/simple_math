@@ -19,6 +19,11 @@ namespace sm {
     }
 
     template <typename V>
+    inline float square_magnitude(const V& v) {
+        return v.square_magnitude();
+    }
+
+    template <typename V>
     inline V normalize(const V& v) {
         return v.normalize();
     }

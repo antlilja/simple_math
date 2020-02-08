@@ -1,7 +1,7 @@
 // Copyright(c) 2019-present, Anton Lilja.
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 
-#include "catch.hpp"
+#include <catch2/catch.hpp>
 #include <simple_math/simple_math.hpp>
 
 using namespace sm;

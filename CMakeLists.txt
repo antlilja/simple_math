@@ -40,8 +40,6 @@ target_compile_options(simple_math
 
 # Testing
 if(SIMPLE_MATH_BUILD_TESTS)
-	include(CTest)
-	enable_testing()
 	add_subdirectory(tests)
 endif()
 

@@ -1,9 +1,16 @@
 # Copyright(c) 2019-present, Anton Lilja.
 # Distributed under the MIT License (http://opensource.org/licenses/MIT)
 
-find_package(benchmark CONFIG REQUIRED)
+set(BENCHMARK_ENABLE_GTEST_TESTS OFF CACHE BOOL "")
+set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "")
 
-set(BENCHMARK_ENABLE_LTO true)
+include(FetchContent)
+FetchContent_Declare(benchmark
+  GIT_REPOSITORY https://github.com/google/benchmark.git
+  GIT_TAG v1.5.0
+)
+
+FetchContent_MakeAvailable(benchmark)
 
 add_executable(simple_math_bench
     main.cpp
@@ -31,6 +38,5 @@ target_compile_options(simple_math_bench
 target_link_libraries(simple_math_bench
     PRIVATE
         simple::math
-        benchmark::benchmark 
-        benchmark::benchmark_main
+        benchmark 
 )

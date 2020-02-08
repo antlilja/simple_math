@@ -22,8 +22,8 @@ A header-only C++ vector math library for games and rendering.
 
 ## Using
 - CMake
-- [Catch2](https://github.com/catchorg/Catch2) Required for tests (catch.hpp included in project)
-- [Google benchmark](https://github.com/google/benchmark) Required for benchmarks (external)
+- [Catch2](https://github.com/catchorg/Catch2)
+- [Google benchmark](https://github.com/google/benchmark) 
 
 ## Examples
 #### Vector 

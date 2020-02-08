@@ -13,7 +13,7 @@ A header-only C++ vector math library for games and rendering.
 - [Color functions](include/simple_math/color.hpp)
 - [Angle types for radians and degrees](include/simple_math/common.hpp)
 - [Ostream operators for all types](include/simple_math/io.hpp)
-- [Constexpr trigonometric functions (sine and cosine)](include/simple_math/utility.hpp)
+- [Constexpr trigonometric functions (sine and cosine)](include/simple_math/utility.hpp) (C++ 20)
      - Approximations implemented using taylor polynomials
 
 ## Todo

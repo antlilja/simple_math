@@ -12,7 +12,7 @@ namespace sm {
             return radians(angle * (PI / 180.0F));
         }
 
-        inline constexpr operator auto() const { return m_angle; }
+        inline constexpr operator float() const { return m_angle; }
 
     private:
         float m_angle;
@@ -26,7 +26,7 @@ namespace sm {
             return degrees(angle * (180.0F / PI));
         }
 
-        inline constexpr operator auto() const { return m_angle; }
+        inline constexpr operator float() const { return m_angle; }
 
     private:
         float m_angle;
